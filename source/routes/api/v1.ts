@@ -4,4 +4,6 @@ const router = express.Router()
 
 router.get('/gallery/items', controller.galleryItems)
 
+router.post('/contact', controller.contact)
+
 export default router

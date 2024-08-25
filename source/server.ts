@@ -1,38 +1,28 @@
 import http from "http";
+import cors from 'cors'
 import express, { Express } from "express";
-import morgan from "morgan";
 import routes from "./routes/index";
 
-const router: Express = express();
+const app: Express = express();
 
-router.use(morgan("dev"));
-router.use(express.urlencoded({ extended: false }));
-router.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-router.use((request, response, next) => {
-  response.header("Access-Control-Allow-Origin", "*");
-  response.header(
-    "Access-Control-Allow-Headers",
-    "origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
 
-  if (request.method === "OPTIONS") {
-    response.header(
-      "Access-Control-Allow-Methods",
-      "GET PATCH PUT DELETE POST"
-    );
-    return response.status(200).json({});
-  }
-  next();
-});
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  methods: ['GET',  'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+  optionsSuccessStatus: 200
+}))
 
-router.use("/", routes);
+app.use("/", routes);
 
-router.use((request, response, next) => {
+app.use((request, response, next) => {
   const { message } = new Error("Not Found");
   return response.status(404).json({ message });
 });
 
-const httpServer = http.createServer(router);
+const httpServer = http.createServer(app);
 const PORT: any = process.env.PORT ?? 3000;
 httpServer.listen(PORT, () => console.log(`The server is running on ${PORT}`))

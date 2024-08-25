@@ -27,6 +27,16 @@ export const galleryItems = async (
   return response.send(result);
 };
 
+export const contact = async (
+  request: Request,
+  response: Response
+) => {
+  console.log('Data:', request.body);
+  return response.json({message: 'Message received!'})
+
+};  
+
 export default {
-  galleryItems
+  galleryItems,
+  contact
 }
