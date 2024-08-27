@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import sendMail from "../../mail";
 
 export const galleryItems = async (
   request: Request,
@@ -32,6 +33,8 @@ export const contact = async (
   response: Response
 ) => {
   console.log('Data:', request.body);
+
+  sendMail(request.body)
   return response.json({message: 'Message received!'})
 
 };  
