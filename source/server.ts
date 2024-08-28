@@ -2,6 +2,7 @@ import http from "http";
 import cors from 'cors'
 import express, { Express } from "express";
 import routes from "./routes/index";
+require('dotenv').config();
 
 const app: Express = express();
 
