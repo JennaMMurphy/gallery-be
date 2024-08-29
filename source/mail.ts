@@ -1,3 +1,4 @@
+import { NextFunction } from "express";
 import nodemailer from "nodemailer";
 
 
@@ -9,11 +10,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendMail = ({
+const sendMail =  ({
   name,
   email,
   subject,
-  message,
+  message
 }: {
   name: string;
   email: string;
@@ -26,13 +27,16 @@ const sendMail = ({
     subject: `${email} sent you a message: ${subject}`,
     text: message,
   };
-
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      throw error;
-    } else {
-      console.log("Email sent: " + info.response);
-    }
+  
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(info);
+      }
+    });
   });
+
 };
 export default sendMail;

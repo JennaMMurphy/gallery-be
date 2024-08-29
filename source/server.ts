@@ -1,6 +1,6 @@
 import http from "http";
 import cors from 'cors'
-import express, { Express } from "express";
+import express, { Express, Request, Response, NextFunction  } from "express";
 import routes from "./routes/index";
 require('dotenv').config();
 
@@ -19,10 +19,12 @@ app.use(cors({
 
 app.use("/", routes);
 
+
 app.use((request, response, next) => {
   const { message } = new Error("Not Found");
   return response.status(404).json({ message });
-});
+})
+
 
 const httpServer = http.createServer(app);
 const PORT: any = process.env.PORT ?? 3000;

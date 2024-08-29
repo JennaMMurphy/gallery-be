@@ -1,11 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import sendMail from "../../mail";
 
-export const galleryItems = async (
-  request: Request,
-  response: Response
-) => {
- const result = [
+export const galleryItems = async (_request: Request, response: Response) => {
+  const result = [
     {
       description: "A description",
       price: 1000.42,
@@ -30,16 +27,18 @@ export const galleryItems = async (
 
 export const contact = async (
   request: Request,
-  response: Response
+  response: Response,
+  next: NextFunction
 ) => {
-  console.log('Data:', request.body);
-
-  sendMail(request.body)
-  return response.json({message: 'Message received!'})
-
-};  
+  try {
+    await sendMail(request.body);
+    next();
+  } catch (error: any) {
+    response.status(error.responseCode).json({ error: "Failed to send email" });
+  }
+};
 
 export default {
   galleryItems,
-  contact
-}
+  contact,
+};
