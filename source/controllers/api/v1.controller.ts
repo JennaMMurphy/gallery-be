@@ -22,7 +22,7 @@ export const galleryItems = async (_request: Request, response: Response) => {
       title: "the name of the piece",
     },
   ];
-  return response.send(result);
+  return response.status(200).json({data: result, message: "Success"});
 };
 
 export const contact = async (
@@ -32,9 +32,9 @@ export const contact = async (
 ) => {
   try {
     await sendMail(request.body);
-    next();
+    return response.status(200).json({ message: "Email sent!" });
   } catch (error: any) {
-    response.status(error.responseCode).json({ error: "Failed to send email" });
+    return response.status(error.responseCode).json({ message: "Failed to send email" });
   }
 };
 

@@ -2,13 +2,7 @@ import { NextFunction } from "express";
 import nodemailer from "nodemailer";
 
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: `${process.env.EMAIL_ADDRESS}`,
-    pass: `${process.env.EMAIL_PASS}`,
-  },
-});
+
 
 const sendMail =  ({
   name,
@@ -23,11 +17,19 @@ const sendMail =  ({
 }) => {
   const mailOptions = {
     from: `${name} <${email}>`,
-    to: "jennasartwebsite@gmail.com",
+    to:`${process.env.EMAIL_ADDRESS}`,
     subject: `${email} sent you a message: ${subject}`,
     text: message,
   };
-  
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: `${process.env.EMAIL_ADDRESS}`,
+      pass: `${process.env.EMAIL_PASS}`,
+    },
+  });
+
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
